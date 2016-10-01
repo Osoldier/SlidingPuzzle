@@ -31,12 +31,15 @@ public class Puzzle8 {
                 } else {
                     //poll() removes and return the first element
                     State s = space.getSpace().poll();
-                    State[] children = getChildren(s);
-                    for (State c : children) {
-                        if (isSolved(c, space.getFinalState())) {
-                            solved = c;
+                    if(!space.getVisitedStates().containsKey(s.getHash())) {
+                        space.getVisitedStates().put(s.getHash(), true);
+                        State[] children = getChildren(s);
+                        for (State c : children) {
+                            if (isSolved(c, space.getFinalState())) {
+                                solved = c;
+                            }
+                            space.getSpace().add(c);
                         }
-                        space.getSpace().add(c);
                     }
                 }
             }
@@ -158,9 +161,9 @@ public class Puzzle8 {
 
     public static void main(String[] args) {
         int[][] initialTiles = {
-                {2, 3, 6},
-                {1, 0, 5},
-                {4, 7, 8}
+                {4, 7, 5},
+                {3, 1, 6},
+                {2, 8, 0}
         };
 
         int[][] finalTiles = {
@@ -173,16 +176,18 @@ public class Puzzle8 {
         Stack<State> path = new Stack<State>();
 
         if(solution != null) {
-            System.out.println("found");
             State tmp = solution;
+            int i = 0;
             while(tmp != null) {
                 path.push(tmp);
                 tmp = tmp.getParent();
+                i++;
             }
 
             while(!path.isEmpty()) {
                 System.out.println(path.pop().toString());
             }
+            System.out.println("Solution found in "+(i-1)+" steps");
 
         } else {
             System.out.println("not found");

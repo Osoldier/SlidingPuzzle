@@ -30,8 +30,13 @@ public class PuzzlePanel extends JPanel {
             int tSize = this.getSize().width / renderState.getTiles().length;
             for (int i = 0; i < renderState.getTiles().length; i++) {
                 for (int j = 0; j < renderState.getTiles()[0].length; j++) {
-                    g2.drawRect(i*tSize, j*tSize, tSize, tSize);
-                    g2.drawString(""+renderState.getTiles()[i][j], j*tSize+tSize/2, i*tSize+tSize/2);
+                    if(renderState.getTiles()[i][j] != 0) {
+                        g2.setColor(Color.red);
+                        g2.fillRect(j*tSize, i*tSize, tSize, tSize);
+                        g2.setColor(Color.black);
+                        g2.drawString("" + renderState.getTiles()[i][j], j * tSize + tSize / 2, i * tSize + tSize / 2);
+                    }
+                    g2.drawRect(j*tSize, i*tSize, tSize, tSize);
                 }
             }
         }

@@ -22,6 +22,12 @@ public class ManhattanDistFunction implements HeuristicFunction {
         return cost;
     }
 
+    /**
+     * Gets the position of a given tile the finalState
+     * @param i The tile to look for
+     * @param finalState the final state
+     * @return array of int with at 0 the x coord and at 1 the y coord
+     */
     private int[] getFinalPosition(int i, State finalState) {
         for (int j = 0; j < finalState.getTiles().length; j++) {
             for (int k = 0; k < finalState.getTiles()[j].length; k++) {

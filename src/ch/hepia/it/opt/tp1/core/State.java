@@ -7,10 +7,17 @@ import java.util.Arrays;
  */
 public class State {
 
+    //used to track the path to the solution
     private State parent;
+    //string version of the state
     private String name;
     private int[][] tiles;
 
+    /**
+     * Creates a new state
+     * @param parent the parent of the state (can be null)
+     * @param tiles tiles of the state
+     */
     public State(State parent, int[][] tiles) {
         this.parent = parent;
         this.tiles = tiles;
@@ -22,6 +29,10 @@ public class State {
         }
     }
 
+    /**
+     * Get the unique hash of this state
+     * @return integer hash of the state
+     */
     public int getHash() {
         return this.name.hashCode();
     }

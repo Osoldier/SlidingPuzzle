@@ -7,6 +7,7 @@ import ch.hepia.it.opt.tp1.core.heuristics.ManhattanDistFunction;
 import ch.hepia.it.opt.tp1.core.heuristics.MisplacedTilesFunction;
 import ch.hepia.it.opt.tp1.gui.MainView;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -22,12 +23,17 @@ public class Puzzle8 {
         this.space = new StateSpace(initialState, finalState);
     }
 
+    /**
+     * Solves the puzzle with blind research
+     * @return the solved state or null
+     */
     public State solveBlindSearch() {
         State solved = null;
         if (isSolved(space.getInitialState(), space.getFinalState())) {
             return space.getInitialState();
         } else {
             space.getSpace().add(space.getInitialState());
+
             while (solved == null) {
                 if (space.getSpace().isEmpty()) {
                     return null;
@@ -35,8 +41,9 @@ public class Puzzle8 {
                     //poll() removes and return the first element
                     State s = space.getSpace().poll();
                     space.getVisitedStates().put(s.getHash(), true);
-                    State[] children = getChildren(s);
+                    List<State> children = getChildren(s);
                     for (State c : children) {
+                        //don't insert already visited states
                         if (!space.getVisitedStates().containsKey(c.getHash())) {
                             if (isSolved(c, space.getFinalState())) {
                                 solved = c;
@@ -50,6 +57,11 @@ public class Puzzle8 {
         return solved;
     }
 
+    /**
+     * Solves the puzzle with an heuristic method
+     * @param h the heuristic function to use
+     * @return the solved state or null
+     */
     public State solveHeuristic(HeuristicFunction h) {
         State solved = null;
         if (isSolved(space.getInitialState(), space.getFinalState())) {
@@ -60,32 +72,33 @@ public class Puzzle8 {
                 if (space.getSpace().isEmpty()) {
                     return null;
                 } else {
-                    //poll() removes and return the first element
-                    State s = space.getSpace().poll();
+                    //poll() removes and return the first element, but we need a non-visited state
+                    State s = null;
+                    do {
+                        s = space.getSpace().poll();
+                    } while(space.getVisitedStates().containsKey(s.getHash()));
                     space.getVisitedStates().put(s.getHash(), true);
-                    State[] children = getChildren(s);
-                    int minH = Integer.MAX_VALUE;
-                    State minHState = null;
+                    List<State> children = getChildren(s);
+                    //lambda expression compare score of h(s)
+                    children.sort((o1, o2) -> Integer.compare(h.getStateScore(o1, space.getFinalState()), h.getStateScore(o2, space.getFinalState())));
                     for (State c : children) {
-                        if (!space.getVisitedStates().containsKey(c.getHash())) {
-                            if (isSolved(c, space.getFinalState())) {
-                                solved = c;
-                            }
-                            int score = h.getStateScore(c, space.getFinalState());
-                            if(score < minH) {
-                                minH = score;
-                                minHState = c;
-                            }
+                        if (isSolved(c, space.getFinalState())) {
+                            solved = c;
                         }
+                        space.getSpace().add(c);
                     }
-                    space.getSpace().add(minHState);
                 }
             }
         }
         return solved;
     }
 
-    private State[] getChildren(State s) {
+    /**
+     * Generate all children for a given state
+     * @param s the parent state
+     * @return List of children
+     */
+    private List<State> getChildren(State s) {
         List<State> children = new LinkedList<State>();
 
         for (int i = 0; i < 3; i++) {
@@ -110,7 +123,7 @@ public class Puzzle8 {
                 }
             }
         }
-        return children.toArray(new State[children.size()]);
+        return children;
     }
 
     private State moveLeft(State s, int x, int y) {
@@ -205,9 +218,9 @@ public class Puzzle8 {
     public static void main(String[] args) {
         //TODO use args
         int[][] initialTiles = {
-                {4, 1, 2},
-                {7, 5, 3},
-                {0, 8, 6}
+                {4, 7, 5},
+                {3, 1, 6},
+                {2, 8, 0}
         };
 
         int[][] finalTiles = {
@@ -218,7 +231,7 @@ public class Puzzle8 {
 
         Puzzle8 p8 = new Puzzle8(new State(null, initialTiles), new State(null, finalTiles));
 
-        State solution = p8.solveHeuristic(new ManhattanDistFunction());
+        State solution = p8.solveHeuristic(new MisplacedTilesFunction());
         //Solve and print
         Stack<State> path = new Stack<State>();
         if (solution != null) {

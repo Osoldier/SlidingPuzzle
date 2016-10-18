@@ -21,7 +21,7 @@ public class MainView extends JFrame implements ActionListener {
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setSize(1200, 700);
-        this.puzzlePanel = new PuzzlePanel(0,0,400,400);
+        this.puzzlePanel = new PuzzlePanel(10,10,400,400);
         this.treePanel = new TreePanel();
         this.add(this.puzzlePanel);
         this.add(this.treePanel);

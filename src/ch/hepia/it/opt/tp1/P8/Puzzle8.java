@@ -5,6 +5,7 @@ import ch.hepia.it.opt.tp1.core.State;
 import ch.hepia.it.opt.tp1.core.StateSpace;
 import ch.hepia.it.opt.tp1.core.heuristics.ManhattanDistFunction;
 import ch.hepia.it.opt.tp1.core.heuristics.MisplacedTilesFunction;
+import ch.hepia.it.opt.tp1.gui.MainView;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -220,7 +221,6 @@ public class Puzzle8 {
         State solution = p8.solveHeuristic(new ManhattanDistFunction());
         //Solve and print
         Stack<State> path = new Stack<State>();
-
         if (solution != null) {
             State tmp = solution;
             int i = 0;
@@ -230,9 +230,7 @@ public class Puzzle8 {
                 i++;
             }
 
-            while (!path.isEmpty()) {
-                System.out.println(path.pop().toString());
-            }
+            new MainView(path);
             System.out.println("Solution found in " + (i - 1) + " steps");
 
         } else {

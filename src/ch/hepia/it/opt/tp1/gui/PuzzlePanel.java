@@ -12,10 +12,12 @@ public class PuzzlePanel extends JPanel {
 
     private State renderState;
     private final Font FONT = new Font("TimesRoman", Font.PLAIN, 24);
+    private int w,h;
 
     public PuzzlePanel(int x, int y, int width, int height) {
-        this.setLocation(x,y);
-        this.setSize(width, height);
+        this.setBounds(x,y,width,height);
+        this.w = width;
+        this.h = height;
         this.setBackground(Color.white);
     }
 
@@ -27,11 +29,11 @@ public class PuzzlePanel extends JPanel {
         g2.setFont(FONT);
 
         if(renderState != null) {
-            int tSize = this.getSize().width / renderState.getTiles().length;
+            int tSize = this.w / renderState.getTiles().length;
             for (int i = 0; i < renderState.getTiles().length; i++) {
                 for (int j = 0; j < renderState.getTiles()[0].length; j++) {
                     if(renderState.getTiles()[i][j] != 0) {
-                        g2.setColor(Color.red);
+                        g2.setColor(Color.pink);
                         g2.fillRect(j*tSize, i*tSize, tSize, tSize);
                         g2.setColor(Color.black);
                         g2.drawString("" + renderState.getTiles()[i][j], j * tSize + tSize / 2, i * tSize + tSize / 2);

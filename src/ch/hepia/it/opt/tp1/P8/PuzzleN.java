@@ -3,11 +3,9 @@ package ch.hepia.it.opt.tp1.P8;
 import ch.hepia.it.opt.tp1.core.heuristics.HeuristicFunction;
 import ch.hepia.it.opt.tp1.core.State;
 import ch.hepia.it.opt.tp1.core.StateSpace;
-import ch.hepia.it.opt.tp1.core.heuristics.ManhattanDistFunction;
 import ch.hepia.it.opt.tp1.core.heuristics.MisplacedTilesFunction;
 import ch.hepia.it.opt.tp1.gui.MainView;
 
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -15,11 +13,13 @@ import java.util.Stack;
 /**
  * Created by Thomas on 01.10.16.
  */
-public class Puzzle8 {
+public class PuzzleN {
 
     private StateSpace space;
+    private int SIZE = 4;
 
-    public Puzzle8(State initialState, State finalState) {
+    public PuzzleN(State initialState, State finalState) {
+        this.SIZE = initialState.getTiles().length;
         this.space = new StateSpace(initialState, finalState);
     }
 
@@ -101,8 +101,8 @@ public class Puzzle8 {
     private List<State> getChildren(State s) {
         List<State> children = new LinkedList<State>();
 
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
                 if (s.getTiles()[i][j] == 0) {
                     State left = moveLeft(s, i, j);
                     State right = moveRight(s, i, j);
@@ -128,10 +128,10 @@ public class Puzzle8 {
 
     private State moveLeft(State s, int x, int y) {
         State left = null;
-        if (x + 1 < 3) {
-            int[][] ntiles = new int[3][3];
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
+        if (x + 1 < SIZE) {
+            int[][] ntiles = new int[SIZE][SIZE];
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
                     if (i == x && j == y) {
                         ntiles[i][j] = s.getTiles()[i + 1][j];
                     } else if (i == x + 1 && j == y) {
@@ -149,9 +149,9 @@ public class Puzzle8 {
     private State moveRight(State s, int x, int y) {
         State right = null;
         if (x - 1 >= 0) {
-            int[][] ntiles = new int[3][3];
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
+            int[][] ntiles = new int[SIZE][SIZE];
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
                     if (i == x && j == y) {
                         ntiles[i][j] = s.getTiles()[i - 1][j];
                     } else if (i == x - 1 && j == y) {
@@ -168,10 +168,10 @@ public class Puzzle8 {
 
     private State moveUp(State s, int x, int y) {
         State up = null;
-        if (y + 1 < 3) {
-            int[][] ntiles = new int[3][3];
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
+        if (y + 1 < SIZE) {
+            int[][] ntiles = new int[SIZE][SIZE];
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
                     if (i == x && j == y) {
                         ntiles[i][j] = s.getTiles()[i][j + 1];
                     } else if (i == x && j == y + 1) {
@@ -189,9 +189,9 @@ public class Puzzle8 {
     private State moveDown(State s, int x, int y) {
         State down = null;
         if (y - 1 >= 0) {
-            int[][] ntiles = new int[3][3];
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
+            int[][] ntiles = new int[SIZE][SIZE];
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
                     if (i == x && j == y) {
                         ntiles[i][j] = s.getTiles()[i][j - 1];
                     } else if (i == x && j == y - 1) {
@@ -208,46 +208,5 @@ public class Puzzle8 {
 
     private boolean isSolved(State currentState, State finalState) {
         return currentState.getHash() == finalState.getHash();
-    }
-
-    //Args[0] template: 0 = solve blind
-    //                  1 = solve h1()
-    //                  2 = solve h2()
-    //Args[1] template: 475316280 (initial state)
-    //Args[2] template: 123456780 (final state)
-    public static void main(String[] args) {
-        //TODO use args
-        int[][] initialTiles = {
-                {4, 7, 5},
-                {3, 1, 6},
-                {2, 8, 0}
-        };
-
-        int[][] finalTiles = {
-                {1, 2, 3},
-                {4, 5, 6},
-                {7, 8, 0}
-        };
-
-        Puzzle8 p8 = new Puzzle8(new State(null, initialTiles), new State(null, finalTiles));
-
-        State solution = p8.solveHeuristic(new MisplacedTilesFunction());
-        //Solve and print
-        Stack<State> path = new Stack<State>();
-        if (solution != null) {
-            State tmp = solution;
-            int i = 0;
-            while (tmp != null) {
-                path.push(tmp);
-                tmp = tmp.getParent();
-                i++;
-            }
-
-            new MainView(path);
-            System.out.println("Solution found in " + (i - 1) + " steps");
-
-        } else {
-            System.out.println("not found");
-        }
     }
 }

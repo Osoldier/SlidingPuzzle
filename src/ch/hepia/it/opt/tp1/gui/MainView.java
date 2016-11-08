@@ -2,6 +2,7 @@ package ch.hepia.it.opt.tp1.gui;
 
 import ch.hepia.it.opt.tp1.P8.PuzzleN;
 import ch.hepia.it.opt.tp1.core.State;
+import ch.hepia.it.opt.tp1.core.heuristics.ManhattanDistFunction;
 import ch.hepia.it.opt.tp1.core.heuristics.MisplacedTilesFunction;
 
 import javax.swing.*;
@@ -16,7 +17,7 @@ public class MainView extends JFrame implements ActionListener {
 
     private final Timer timer;
     private final PuzzlePanel puzzlePanel;
-    private final JButton btnSolve;
+    private final JButton btnSolve1, btnSolve2, btnSolve3;
     private final JTextField[] initials = new JTextField[16];
     private final JTextField[] finals = new JTextField[16];
     private PuzzleN p;
@@ -86,16 +87,36 @@ public class MainView extends JFrame implements ActionListener {
         });
         this.add(ptype);
         this.puzzlePanel = new PuzzlePanel(10,10,400,400);
-        this.btnSolve = new JButton("Solve Blind");
-        this.btnSolve.setLocation(420, 10);
-        this.btnSolve.setSize(200, 30);
-        this.btnSolve.addActionListener(e -> {
+        this.btnSolve1 = new JButton("Solve Blind");
+        this.btnSolve1.setLocation(420, 10);
+        this.btnSolve1.setSize(200, 30);
+        this.btnSolve1.addActionListener(e -> {
+            PuzzleN p1 = initFromUI();
+            State solution = p1.solveBlindSearch();
+            showSolution(solution);
+        });
+        this.add(this.btnSolve1);
+
+        this.btnSolve2 = new JButton("Solve H1");
+        this.btnSolve2.setLocation(630, 10);
+        this.btnSolve2.setSize(200, 30);
+        this.btnSolve2.addActionListener(e -> {
             PuzzleN p1 = initFromUI();
             State solution = p1.solveHeuristic(new MisplacedTilesFunction());
             showSolution(solution);
         });
+        this.add(this.btnSolve2);
 
-        this.add(this.btnSolve);
+        this.btnSolve3 = new JButton("Solve H2");
+        this.btnSolve3.setLocation(840, 10);
+        this.btnSolve3.setSize(200, 30);
+        this.btnSolve3.addActionListener(e -> {
+            PuzzleN p1 = initFromUI();
+            State solution = p1.solveHeuristic(new ManhattanDistFunction());
+            showSolution(solution);
+        });
+        this.add(this.btnSolve3);
+
         this.add(this.puzzlePanel);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.timer = new Timer(400, this);

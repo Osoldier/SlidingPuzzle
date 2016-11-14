@@ -119,7 +119,7 @@ public class MainView extends JFrame implements ActionListener {
 
         this.add(this.puzzlePanel);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.timer = new Timer(400, this);
+        this.timer = new Timer(100, this);
         this.timer.start();
 
         this.setVisible(true);

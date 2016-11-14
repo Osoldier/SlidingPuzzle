@@ -3,12 +3,11 @@ package ch.hepia.it.opt.tp1.P8;
 import ch.hepia.it.opt.tp1.core.heuristics.HeuristicFunction;
 import ch.hepia.it.opt.tp1.core.State;
 import ch.hepia.it.opt.tp1.core.StateSpace;
-import ch.hepia.it.opt.tp1.core.heuristics.MisplacedTilesFunction;
-import ch.hepia.it.opt.tp1.gui.MainView;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Stack;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  * Created by Thomas on 01.10.16.
@@ -16,6 +15,7 @@ import java.util.Stack;
 public class PuzzleN {
 
     private StateSpace space;
+    private Queue<State> queue;
     private int SIZE = 4;
 
     public PuzzleN(State initialState, State finalState) {
@@ -28,32 +28,37 @@ public class PuzzleN {
      * @return the solved state or null
      */
     public State solveBlindSearch() {
+        int sc = 0;
+        queue = new LinkedList<>();
+        queue.add(space.getInitialState());
         State solved = null;
         if (isSolved(space.getInitialState(), space.getFinalState())) {
             return space.getInitialState();
         } else {
-            space.getSpace().add(space.getInitialState());
+            queue.add(space.getInitialState());
 
             while (solved == null) {
-                if (space.getSpace().isEmpty()) {
+                if (queue.isEmpty()) {
                     return null;
                 } else {
                     //poll() removes and return the first element
-                    State s = space.getSpace().poll();
+                    State s = queue.poll();
                     space.getVisitedStates().put(s.getHash(), true);
                     List<State> children = getChildren(s);
+                    sc++;
                     for (State c : children) {
                         //don't insert already visited states
                         if (!space.getVisitedStates().containsKey(c.getHash())) {
                             if (isSolved(c, space.getFinalState())) {
                                 solved = c;
                             }
-                            space.getSpace().add(c);
+                            queue.add(c);
                         }
                     }
                 }
             }
         }
+        System.out.println("States visited "+sc);
         return solved;
     }
 
@@ -63,33 +68,37 @@ public class PuzzleN {
      * @return the solved state or null
      */
     public State solveHeuristic(HeuristicFunction h) {
+        int sc = 0;
+        queue = new PriorityQueue<>((o1, o2) -> Integer.compare(h.getStateScore(o1, space.getFinalState()), h.getStateScore(o2, space.getFinalState())));
+        queue.add(space.getInitialState());
         State solved = null;
         if (isSolved(space.getInitialState(), space.getFinalState())) {
             return space.getInitialState();
         } else {
-            space.getSpace().add(space.getInitialState());
+            queue.add(space.getInitialState());
             while (solved == null) {
-                if (space.getSpace().isEmpty()) {
+                if (queue.isEmpty()) {
                     return null;
                 } else {
                     //poll() removes and return the first element, but we need a non-visited state
                     State s = null;
                     do {
-                        s = space.getSpace().poll();
+                        s = queue.poll();
                     } while(space.getVisitedStates().containsKey(s.getHash()));
                     space.getVisitedStates().put(s.getHash(), true);
+                    sc++;
                     List<State> children = getChildren(s);
                     //lambda expression compare score of h(s)
-                    children.sort((o1, o2) -> Integer.compare(h.getStateScore(o1, space.getFinalState()), h.getStateScore(o2, space.getFinalState())));
                     for (State c : children) {
                         if (isSolved(c, space.getFinalState())) {
                             solved = c;
                         }
-                        space.getSpace().add(c);
+                        queue.add(c);
                     }
                 }
             }
         }
+        System.out.println("States visited "+sc);
         return solved;
     }
 

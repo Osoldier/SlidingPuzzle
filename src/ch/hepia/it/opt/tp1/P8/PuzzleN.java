@@ -17,6 +17,7 @@ public class PuzzleN {
     private StateSpace space;
     private Queue<State> queue;
     private int SIZE = 4;
+    private final int MAX_QUEUE = (int)100E5;
 
     public PuzzleN(State initialState, State finalState) {
         this.SIZE = initialState.getTiles().length;
@@ -43,6 +44,10 @@ public class PuzzleN {
                 } else {
                     //poll() removes and return the first element
                     State s = queue.poll();
+                    if(queue.size() > MAX_QUEUE) {
+                        solved = s;
+                        System.out.println("Stopped search");
+                    }
                     space.getVisitedStates().put(s.getHash(), true);
                     List<State> children = getChildren(s);
                     sc++;
@@ -85,6 +90,10 @@ public class PuzzleN {
                     do {
                         s = queue.poll();
                     } while(space.getVisitedStates().containsKey(s.getHash()));
+                    if(queue.size() > MAX_QUEUE) {
+                        solved = s;
+                        System.out.println("Stopped search");
+                    }
                     space.getVisitedStates().put(s.getHash(), true);
                     sc++;
                     List<State> children = getChildren(s);

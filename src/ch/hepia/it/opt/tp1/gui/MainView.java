@@ -8,6 +8,7 @@ import ch.hepia.it.opt.tp1.core.heuristics.MisplacedTilesFunction;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 import java.util.Stack;
 
 /**
@@ -20,6 +21,7 @@ public class MainView extends JFrame implements ActionListener {
     private final JButton btnSolve1, btnSolve2, btnSolve3;
     private final JTextField[] initials = new JTextField[16];
     private final JTextField[] finals = new JTextField[16];
+    private final JButton btnRandom;
     private PuzzleN p;
     private int pSize = 4;
 
@@ -117,6 +119,37 @@ public class MainView extends JFrame implements ActionListener {
         });
         this.add(this.btnSolve3);
 
+        this.btnRandom = new JButton("Random Inital Puzzle");
+        this.btnRandom.setBounds(840, 100, 200, 30);
+        this.btnRandom.addActionListener(e -> {
+            boolean[] usedValues = new boolean[pSize*pSize];
+            Random rand = new Random();
+            int i = 0;
+            if(pSize == 3) {
+                while(i < 11) {
+                    int k = rand.nextInt(pSize*pSize);
+                    if(!usedValues[k]) {
+                        System.out.println(i);
+                        usedValues[k] = true;
+                        initials[i].setText(""+k);
+                        if(i == 2 || i == 6 || i == 10) i++;
+                        i++;
+                    }
+                }
+            } else {
+                while(i < 16) {
+                    int k = rand.nextInt(pSize*pSize);
+                    if(!usedValues[k]) {
+                        System.out.println(i);
+                        usedValues[k] = true;
+                        initials[i].setText(""+k);
+                        i++;
+                    }
+                }
+            }
+
+        });
+        this.add(btnRandom);
         this.add(this.puzzlePanel);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.timer = new Timer(100, this);

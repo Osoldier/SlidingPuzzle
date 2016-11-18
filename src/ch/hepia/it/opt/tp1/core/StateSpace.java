@@ -27,10 +27,6 @@ public class StateSpace {
         return finalState;
     }
 
-    /*public Queue<State> getSpace() {
-        return space;
-    }*/
-
     public HashMap<Integer, Boolean> getVisitedStates() {
         return visitedStates;
     }

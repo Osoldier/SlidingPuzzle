@@ -1,4 +1,4 @@
-package ch.hepia.it.opt.tp1.P8;
+package ch.hepia.it.opt.tp1.puzzle;
 
 import ch.hepia.it.opt.tp1.core.heuristics.HeuristicFunction;
 import ch.hepia.it.opt.tp1.core.State;

@@ -1,6 +1,6 @@
 package ch.hepia.it.opt.tp1.gui;
 
-import ch.hepia.it.opt.tp1.P8.PuzzleN;
+import ch.hepia.it.opt.tp1.puzzle.PuzzleN;
 import ch.hepia.it.opt.tp1.core.State;
 import ch.hepia.it.opt.tp1.core.heuristics.ManhattanDistFunction;
 import ch.hepia.it.opt.tp1.core.heuristics.MisplacedTilesFunction;
@@ -129,7 +129,6 @@ public class MainView extends JFrame implements ActionListener {
                 while(i < 11) {
                     int k = rand.nextInt(pSize*pSize);
                     if(!usedValues[k]) {
-                        System.out.println(i);
                         usedValues[k] = true;
                         initials[i].setText(""+k);
                         if(i == 2 || i == 6 || i == 10) i++;
@@ -140,7 +139,6 @@ public class MainView extends JFrame implements ActionListener {
                 while(i < 16) {
                     int k = rand.nextInt(pSize*pSize);
                     if(!usedValues[k]) {
-                        System.out.println(i);
                         usedValues[k] = true;
                         initials[i].setText(""+k);
                         i++;

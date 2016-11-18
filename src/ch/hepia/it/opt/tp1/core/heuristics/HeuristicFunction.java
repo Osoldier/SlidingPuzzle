@@ -8,10 +8,10 @@ import ch.hepia.it.opt.tp1.core.State;
 public interface HeuristicFunction {
 
     /**
-     * Compute the score of a given stte
+     * Compute the score of a given state
      * @param n the state evalute
      * @param finalState the state to reach
      * @return the score
      */
-    public int getStateScore(State n, State finalState);
+    int getStateScore(State n, State finalState);
 }
